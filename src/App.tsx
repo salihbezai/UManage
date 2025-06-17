@@ -1,10 +1,11 @@
+import Home from "./components/Home"
 
 
 function App() {
 
   return (
     <>
-    <h1 className="">Hello world !</h1>
+    <Home/>    
     </>
   )
 }
