@@ -1,12 +1,49 @@
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus } from "lucide-react";
 
 const ToolBar = () => {
   return (
     <div>
-      <div>
-        <input placeholder="Search Items..."/>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex gap-4 flex-col sm:flex-row items-start sm:items-center">
+          <input
+            className="text-white border-2
+                 border-white px-3 py-1 rounded-[10px] placeholder:text-white"
+            placeholder="Search Items..."
+          />
+          <Select>
+            <SelectTrigger
+              className="w-[180px] border-2
+            border-white text-white"
+            >
+              <SelectValue placeholder="Permissions" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="light">Light</SelectItem>
+              <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="system">System</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <button
+            className="bg-[#D76F24]
+     text-white font-bold px-3 py-2
+      flex justify-center items-cente rounded-[10px] cursor-pointer"
+          >
+            <Plus />
+            New User
+          </button>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ToolBar
+export default ToolBar;
