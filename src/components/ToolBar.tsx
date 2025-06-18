@@ -10,13 +10,14 @@ import { Plus } from "lucide-react";
 const ToolBar = () => {
   return (
     <div>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex gap-4 flex-col sm:flex-row items-start sm:items-center">
-          <input
+      <div className="flex flex-col sm:flex-row items-start sm:items-center  justify-between gap-1 sm:gap-4">
+        <div className="">
+          {/* <input
             className="text-white border-2
-                 border-white px-3 py-1 rounded-[10px] placeholder:text-white"
+                 border-white px-3 py-1 rounded-[10px]
+                  placeholder:text-white"
             placeholder="Search Items..."
-          />
+          /> */}
           <Select>
             <SelectTrigger
               className="w-[180px] border-2
@@ -35,7 +36,9 @@ const ToolBar = () => {
           <button
             className="bg-[#D76F24]
      text-white font-bold px-3 py-2
-      flex justify-center items-cente rounded-[10px] cursor-pointer"
+      flex justify-center items-center
+       rounded-[10px] cursor-pointer transform transition-transform duration-200
+       hover:scale-105 "
           >
             <Plus />
             New User

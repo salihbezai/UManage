@@ -15,7 +15,14 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  Delete,
+  Edit,
+  MoreHorizontal,
+  Trash,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -37,45 +44,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import ToolBar from "./ToolBar";
 
 const data: Payment[] = [
   {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
+    id: "1",
+    fullName: "salih bezai",
+    emailAddress: "salihbezai@gmail.com",
+    location: "Batna -2000 ",
+    joined: new Date(),
+    permission: "Admin",
   },
 ];
 
 export type Payment = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
+  fullName: string;
+  emailAddress: string;
+  location: string;
+  joined: Date;
+  permission: string;
 };
 
 export const columns: ColumnDef<Payment>[] = [
@@ -102,41 +90,71 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "fullName",
+    header: "Full Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">{row.getValue("fullName")}</div>
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "emailAddress",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Email Address
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("emailAddress")}</div>
+    ),
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+    accessorKey: "location",
+    header: () => <div className="text-right">Location</div>,
+    cell: ({ row }) => (
+      <div className="text-right font-medium">{row.getValue("location")}</div>
+    ),
+  },
+  {
+    accessorKey: "joined",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Joined
+          <ArrowUpDown />
+        </Button>
+      );
     },
+    cell: ({ row }) => {
+      const date: Date = row.getValue("joined");
+      const formattedDate = date.toLocaleDateString();
+      return <div>{formattedDate}</div>;
+    },
+  },
+  {
+    accessorKey: "permission",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Permissions
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("permission")}</div>
+    ),
   },
   {
     id: "actions",
@@ -153,15 +171,21 @@ export const columns: ColumnDef<Payment>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
+              className="flex items-center cursor-pointer  text-[#4E4E4E] "
             >
-              Copy payment ID
+              Edit
+              <Edit color="#D76F24" />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payment.id)}
+              className="flex items-center cursor-pointer text-[#4E4E4E]"
+            >
+              Delete
+              <Trash color="#D76F24" />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -199,15 +223,21 @@ export function DataTable() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div
+        className="flex  items-start py-4 justify-between flex-col
+       sm:flex-row gap-3 sm:items-center"
+      >
         <Input
           placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+          value={
+            (table.getColumn("emailAddress")?.getFilterValue() as string) ?? ""
           }
-          className="max-w-sm text-white placeholder:text-white"
+          onChange={(event) =>
+            table.getColumn("emailAddress")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm text-white placeholder:text-white "
         />
+        <ToolBar />
         <DropdownMenu>
           <DropdownMenuContent align="end">
             {table
@@ -259,7 +289,7 @@ export function DataTable() {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="text-white"
+                  className="text-white data-[state=selected]:bg-[#D76F24]"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -289,6 +319,12 @@ export function DataTable() {
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
+
+        <div className="text-sm text-white">
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
+        </div>
+
         <div className="space-x-2">
           <Button
             variant="outline"
